@@ -1,0 +1,16 @@
+pandas
+numpy
+scikit-learn
+xgboost
+prophet
+matplotlib
+seaborn
+evidently
+dvc
+fastapi
+uvicorn
+streamlit
+python-dotenv
+requests
+slack_sdk
+sendgrid
