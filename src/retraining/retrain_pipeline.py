@@ -36,3 +36,7 @@ json.dump(metrics, open("models/metrics.json", "w"), indent=2)
 
 print("✅ Model retrained and saved:", model_path) 
 print("📊 Metrics:", metrics)
+
+
+with open("logs/retrain_logs.log", "a") as f:
+    f.write(f"{timestamp}: retrain completed with MAPE={mape:.2f}\n")
