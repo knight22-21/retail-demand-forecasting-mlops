@@ -34,5 +34,5 @@ model_path = f"../models/model_{timestamp}.pkl"
 joblib.dump(model, model_path)
 json.dump(metrics, open("../models/metrics.json", "w"), indent=2)
 
-print("✅ Model retrained and saved:", model_path)
+print("✅ Model retrained and saved:", model_path) 
 print("📊 Metrics:", metrics)
