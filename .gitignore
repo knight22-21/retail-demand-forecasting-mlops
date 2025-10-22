@@ -217,5 +217,5 @@ reports/data_drift_report_feature_data.html
 logs/drift_logs_feature_data.log
 
 
-.github\workflows\deploy.yml
-.github\workflows\test_pipeline.yml
+.github/workflows/deploy.yml
+.github/workflows/test_pipeline.yml
