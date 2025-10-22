@@ -205,3 +205,12 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+
+
+
+
+notebooks/02_drift_detection_detailed.ipynb
+reports/drift_summary_feature_data.json
+reports/data_drift_report_feature_data.html
