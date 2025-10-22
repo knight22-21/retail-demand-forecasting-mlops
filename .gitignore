@@ -215,3 +215,7 @@ notebooks/02_drift_detection_detailed.ipynb
 reports/drift_summary_feature_data.json
 reports/data_drift_report_feature_data.html
 logs/drift_logs_feature_data.log
+
+
+.github\workflows\deploy.yml
+.github\workflows\test_pipeline.yml
