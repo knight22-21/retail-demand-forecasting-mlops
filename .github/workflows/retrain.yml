@@ -1,0 +1,50 @@
+name: Auto Retrain Pipeline
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # Every Monday at 9AM UTC
+  push:
+    paths:
+      - reports/drift_summary.json
+
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check drift flag
+        id: check_drift
+        run: |
+          if [ -f "trigger_retrain.flag" ]; then
+            echo "Drift detected!"
+            echo "run_retrain=true" >> $GITHUB_OUTPUT
+          else
+            echo "No drift."
+            echo "run_retrain=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run retraining
+        if: steps.check_drift.outputs.run_retrain == 'true'
+        run: python src/retraining/retrain_pipeline.py
+
+      - name: Commit new model
+        if: steps.check_drift.outputs.run_retrain == 'true'
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add models/
+          git commit -m "Auto retrain: new model version"
+          git push
