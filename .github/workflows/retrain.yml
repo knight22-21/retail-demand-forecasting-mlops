@@ -5,7 +5,8 @@ on:
     - cron: '0 9 * * 1'   # Every Monday at 9AM UTC
   push:
     paths:
-      - reports/drift_summary.json
+      - reports/drift_summary.json    # Drift summary file (if you're using it)
+      - trigger_retrain.flag          # Add the flag file here to trigger retraining
 
 jobs:
   retrain:
