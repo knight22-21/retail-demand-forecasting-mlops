@@ -56,7 +56,7 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
+
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -214,3 +214,4 @@ __marimo__/
 notebooks/02_drift_detection_detailed.ipynb
 reports/drift_summary_feature_data.json
 reports/data_drift_report_feature_data.html
+logs/drift_logs_feature_data.log
