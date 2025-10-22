@@ -7,7 +7,7 @@ import os
 from datetime import datetime
 
 # 1️⃣ Load new data
-data_path = "../data/processed/cleaned_data.csv"
+data_path = "data/processed/cleaned_data.csv"
 df = pd.read_csv(data_path, parse_dates=['date'])
 
 # 2️⃣ Feature prep (reuse logic)
@@ -30,9 +30,9 @@ metrics = {"mae": mae, "rmse": rmse, "mape": mape}
 
 # 5️⃣ Save new artifacts
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-model_path = f"../models/model_{timestamp}.pkl"
+model_path = f"models/model_{timestamp}.pkl"
 joblib.dump(model, model_path)
-json.dump(metrics, open("../models/metrics.json", "w"), indent=2)
+json.dump(metrics, open("models/metrics.json", "w"), indent=2)
 
 print("✅ Model retrained and saved:", model_path) 
 print("📊 Metrics:", metrics)
