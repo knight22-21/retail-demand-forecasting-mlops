@@ -12,3 +12,4 @@ with open("drift_result.txt", "w") as f:
     else:
         f.write("false")
         print("No drift detected; skipping retrain.")
+
