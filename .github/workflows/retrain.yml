@@ -30,10 +30,12 @@ jobs:
 
       - name: Configure DVC remote for DagsHub
         run: |
-          dvc remote add -d dagshub_remote https://dagshub.com/${{ secrets.DAGSHUB_USER }}/mlops_1.dvc
+          dvc remote modify dagshub_remote url https://dagshub.com/${{ secrets.DAGSHUB_USER }}/mlops_1.dvc
           dvc remote modify dagshub_remote auth basic
           dvc remote modify dagshub_remote user ${{ secrets.DAGSHUB_USER }}
           dvc remote modify dagshub_remote password ${{ secrets.DAGSHUB_TOKEN }}
+          dvc remote default dagshub_remote
+
 
       - name: Pull latest data and models from DagsHub
         run: dvc pull
