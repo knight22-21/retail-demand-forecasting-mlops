@@ -36,7 +36,8 @@ metrics = {"mae": mae, "rmse": rmse, "mape": mape}
 
 # 5️⃣ Save new artifacts
 timestamp = datetime.now().strftime("%Y%m%d_%H%M")
-model_path = f"models/model_{timestamp}.pkl"
+model_path = "models/model.pkl"
+
 joblib.dump(model, model_path)
 json.dump(metrics, open("models/metrics.json", "w"), indent=2)
 
