@@ -4,8 +4,10 @@ on:
   schedule:
     - cron: '0 9 * * 1'   # Every Monday at 9AM UTC
   push:
-    paths:
-      - reports/drift_summary.json
+    branches:
+      - main
+    # paths:
+      # - reports/drift_summary.json
       # You can remove trigger_retrain.flag here since it's managed internally now
 
 jobs:
