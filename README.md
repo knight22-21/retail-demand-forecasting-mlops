@@ -129,9 +129,82 @@ The following goals were achieved in **Step 2**:
 * Drift results were logged and stored for future automation of model retraining.
 * The outputs were organized and stored in appropriate directories (`reports/`, `logs/`).
 
+
+
+## **Step 3: Automate Retraining**
+
+### **Objective:**
+
+Building on the drift detection capability from Step 2, Step 3 focused on fully automating the model retraining workflow. This ensures that whenever data or concept drift is detected, the model retrains itself, updates versioned artifacts, and commits changes to the repository — all without manual intervention.
+
 ---
 
-## **Next Steps (Step 3)**
+### **What Was Achieved in Step 3:**
 
-With **Step 2** completed, the next step is **Step 3: Automate Retraining**. In this phase, we will automate the retraining process using **GitHub Actions** and **DVC** (Data Version Control) to trigger retraining whenever drift is detected.
+#### 1. **Data & Model Versioning with DVC and DagsHub Integration**
 
+* Initialized DVC in the project to efficiently track datasets and model files, ensuring reproducibility.
+* Added key processed data files and trained models to DVC tracking, enabling seamless version control.
+* Configured DVC to use **DagsHub as the remote storage backend**, providing scalable and reliable cloud storage for large data and model artifacts.
+* Leveraged DagsHub’s integration with GitHub to synchronize data and model versions transparently, keeping the repository lightweight while maintaining full history and collaboration capabilities.
+* Ensured that all CI/CD pipeline steps pull the latest artifacts from DagsHub, guaranteeing consistent and up-to-date inputs for drift detection and retraining.
+
+#### 2. **Retraining Pipeline Script**
+
+* Developed a robust retraining script that:
+
+  * Loads the latest processed data directly managed by DVC and stored remotely on DagsHub.
+  * Performs feature preparation consistent with earlier steps.
+  * Retrains the model using the selected regression algorithm.
+  * Evaluates retraining performance using standard metrics (MAE, RMSE, MAPE).
+  * Saves the updated model and metrics with timestamped filenames for version tracking.
+  * Logs retraining events for transparency and auditability.
+
+#### 3. **Drift-to-Retrain Trigger Integration**
+
+* Enhanced the drift detection process to generate a lightweight flag file signaling when data or concept drift is detected.
+* This flag serves as a reliable trigger for the automated retraining pipeline.
+
+#### 4. **GitHub Actions Workflow for End-to-End Automation**
+
+* Created a GitHub Actions pipeline that:
+
+  * Runs on a scheduled basis (weekly) or when new drift reports are pushed.
+  * Checks for the presence of the retrain trigger flag.
+  * Executes the retraining script only if drift has been detected.
+  * Commits updated model artifacts and metrics to the repository.
+  * Pushes DVC-tracked changes to **DagsHub remote storage**, ensuring remote artifacts remain synchronized.
+* This workflow fully automates the retraining cycle — from drift detection to retraining, version control, and remote artifact management — using free-tier tools.
+
+#### 5. **Logging and Monitoring**
+
+* Implemented logging of retraining events into a dedicated log file, capturing timestamps and key performance metrics.
+* Established a foundation for future alerting mechanisms or notifications upon retraining.
+* Logs and versioned metrics enable ongoing analysis of model performance and retraining history.
+
+---
+
+### **Deliverables in Step 3:**
+
+| Deliverable                  | Location                                   |
+| ---------------------------- | ------------------------------------------ |
+| DVC tracked data and models  | `.dvc/` directory and corresponding files  |
+| DagsHub remote configuration | `.dvc/config` (pointing to DagsHub remote) |
+| Retraining script            | `src/retraining/retrain_pipeline.py`       |
+| Drift retrain trigger        | `drift_result.txt` (auto-generated)        |
+| GitHub Actions workflow      | `.github/workflows/retrain.yml`            |
+| Retraining logs              | `logs/retrain_logs.log`                    |
+
+---
+
+### **Summary:**
+
+Step 3 established a fully automated MLOps retraining pipeline that tightly couples data and concept drift detection with retraining, artifact versioning, and repository updates. The integration of **DagsHub as a remote DVC storage backend** enhances scalability, collaboration, and artifact management, ensuring that large data and model files are efficiently handled outside of the GitHub repo.
+
+This architecture ensures the model continuously adapts to evolving data with minimal manual intervention, providing a reliable, maintainable, and scalable foundation for production-ready machine learning workflows.
+
+---
+
+### **Next Steps:**
+
+With automated retraining and robust version control via DVC and DagsHub in place, the project is ready to advance to **Step 4: Model Deployment**, focusing on packaging the model with FastAPI and Docker, and deploying it to cloud infrastructure for serving real-time predictions.
