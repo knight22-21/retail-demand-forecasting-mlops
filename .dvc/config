@@ -1,5 +1,8 @@
 [core]
     remote = dagshub_remote
+    autostage = true
 ['remote "dagshub_remote"']
     url = https://dagshub.com/knight22-21/mlops_1.dvc
     auth = basic
+    user = knight22-21
+    password = a3e678ea034b0dd01edddcb2062a327b4cfe6a96
