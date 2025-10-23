@@ -65,6 +65,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github-actions[bot].github.com
-          git add models/model.pkl.dvc .gitignore
+          git add models/model.pkl.dvc .gitignore models/metrics.json logs/retrain_logs.log .dvc/config
           git commit -m "Auto retrain: new model version [skip ci]" || echo "No changes to commit"
           git push
+
