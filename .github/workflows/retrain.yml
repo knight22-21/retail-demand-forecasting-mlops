@@ -5,8 +5,8 @@ on:
     - cron: '0 9 * * 1'   # Every Monday at 9AM UTC
   push:
     paths:
-      - reports/drift_summary.json    # Drift summary file (if you're using it)
-      - trigger_retrain.flag          # Add the flag file here to trigger retraining
+      - reports/drift_summary.json
+      - trigger_retrain.flag
 
 jobs:
   retrain:
@@ -24,12 +24,18 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
+          pip install dvc[dagsHub]
 
-      - name: Install DVC
-        run: pip install dvc
+      - name: Configure DVC remote for DagsHub
+        run: |
+          dvc remote add -d dagshub_remote https://dagshub.com/${{ secrets.DAGSHUB_USER }}/mlops_1.dvc
+          dvc remote modify dagshub_remote auth basic
+          dvc remote modify dagshub_remote user ${{ secrets.DAGSHUB_USER }}
+          dvc remote modify dagshub_remote password ${{ secrets.DAGSHUB_TOKEN }}
 
-      - name: Pull data (DVC)
+      - name: Pull latest data and models from DagsHub
         run: dvc pull
 
       - name: Check drift flag
@@ -47,11 +53,17 @@ jobs:
         if: steps.check_drift.outputs.run_retrain == 'true'
         run: python src/retraining/retrain_pipeline.py
 
-      - name: Commit new model
+      - name: Track updated model with DVC
+        if: steps.check_drift.outputs.run_retrain == 'true'
+        run: |
+          dvc add models/model.pkl
+          dvc push
+
+      - name: Commit new model metadata and push to GitHub
         if: steps.check_drift.outputs.run_retrain == 'true'
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add models/
-          git commit -m "Auto retrain: new model version"
+          git add models.dvc .gitignore
+          git commit -m "Auto retrain: new model version [skip ci]" || echo "No changes to commit"
           git push
