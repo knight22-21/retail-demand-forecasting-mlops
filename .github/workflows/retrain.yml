@@ -58,6 +58,7 @@ jobs:
       - name: Track updated model with DVC
         if: steps.check_drift.outputs.run_retrain == 'true'
         run: |
+          dvc config core.autostage true
           dvc add models/model.pkl
           dvc push
 
@@ -66,6 +67,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git add models.dvc .gitignore
+          git add models/model.pkl.dvc .gitignore
           git commit -m "Auto retrain: new model version [skip ci]" || echo "No changes to commit"
           git push
+
