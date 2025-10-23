@@ -6,7 +6,7 @@ on:
   push:
     paths:
       - reports/drift_summary.json
-      - trigger_retrain.flag
+      # You can remove trigger_retrain.flag here since it's managed internally now
 
 jobs:
   retrain:
@@ -36,38 +36,33 @@ jobs:
           dvc remote modify dagshub_remote password ${{ secrets.DAGSHUB_TOKEN }}
           dvc remote default dagshub_remote
 
-
       - name: Pull latest data and models from DagsHub
         run: dvc pull
 
-      - name: Check drift flag
-        id: check_drift
+      - name: Run drift detection
+        id: drift_detection
         run: |
-          if [ -f "trigger_retrain.flag" ]; then
-            echo "Drift detected!"
-            echo "run_retrain=true" >> $GITHUB_OUTPUT
-          else
-            echo "No drift."
-            echo "run_retrain=false" >> $GITHUB_OUTPUT
-          fi
+          python src/drift/drift_detection.py
+          # Your script should create a file like drift_result.txt with 'true' or 'false'
+          cat drift_result.txt
+          echo "drift=$(cat drift_result.txt)" >> $GITHUB_OUTPUT
 
       - name: Run retraining
-        if: steps.check_drift.outputs.run_retrain == 'true'
+        if: steps.drift_detection.outputs.drift == 'true'
         run: python src/retraining/retrain_pipeline.py
 
       - name: Track updated model with DVC
-        if: steps.check_drift.outputs.run_retrain == 'true'
+        if: steps.drift_detection.outputs.drift == 'true'
         run: |
           dvc config core.autostage true
           dvc add models/model.pkl
           dvc push
 
       - name: Commit new model metadata and push to GitHub
-        if: steps.check_drift.outputs.run_retrain == 'true'
+        if: steps.drift_detection.outputs.drift == 'true'
         run: |
           git config user.name github-actions
-          git config user.email github-actions@github.com
+          git config user.email github-actions@github-actions[bot].github.com
           git add models/model.pkl.dvc .gitignore
           git commit -m "Auto retrain: new model version [skip ci]" || echo "No changes to commit"
           git push
-
