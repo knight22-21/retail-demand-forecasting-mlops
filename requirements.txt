@@ -15,3 +15,4 @@ requests
 slack_sdk
 sendgrid
 dvc[s3]
+prometheus-client
