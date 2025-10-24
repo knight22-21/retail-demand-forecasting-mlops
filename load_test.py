@@ -27,6 +27,7 @@ def send_requests(n=200, delay_range=(0.5, 2.0)):
             print(f"{i+1:03} | Error: {e}")
         time.sleep(random.uniform(*delay_range))
 
+
 if __name__ == "__main__":
     send_requests(n=300)
  
