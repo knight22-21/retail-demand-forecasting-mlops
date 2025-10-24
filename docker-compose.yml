@@ -1,4 +1,5 @@
 version: "3.9"
+
 services:
   api:
     build: .
@@ -6,7 +7,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - MODEL_PATH=models/model_latest.pkl
+      - MODEL_PATH=models/model.pkl
+    networks:
+      - monitor-net
 
   prometheus:
     image: prom/prometheus
@@ -15,6 +18,10 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+    depends_on:
+      - api
+    networks:
+      - monitor-net
 
   grafana:
     image: grafana/grafana
@@ -24,3 +31,11 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - monitor-net
+
+networks:
+  monitor-net:
+    driver: bridge
