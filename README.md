@@ -203,8 +203,81 @@ Step 3 established a fully automated MLOps retraining pipeline that tightly coup
 
 This architecture ensures the model continuously adapts to evolving data with minimal manual intervention, providing a reliable, maintainable, and scalable foundation for production-ready machine learning workflows.
 
+
+
+## **Step 4: Model Deployment via API**
+
+### **Objective:**
+
+In **Step 4**, the goal was to expose the trained forecasting model as a **REST API** that can be queried for real-time predictions. By using **FastAPI** for the backend and **Docker** for containerization, we can easily deploy this API locally or to a cloud platform such as **Hugging Face Spaces** for serving predictions.
+
+### **Steps Completed in Step 4:**
+
+#### **1. Folder Structure Setup**
+
+The project structure was updated to accommodate the FastAPI app and Docker setup. The key components include:
+
+* **API code** (`src/api/`) for handling the prediction logic.
+* **Model** (`models/model_latest.pkl`) to store the latest trained model.
+* **Configuration files** for dependencies (`requirements.txt`) and environment setup (`.env`).
+* **Dockerfile** for containerizing the API app.
+
+#### **2. FastAPI App Creation**
+
+A FastAPI application was created to serve the model through a REST API. The app includes the following endpoints:
+
+* **`/`**: A simple endpoint confirming that the API is running.
+* **`/predict`**: A POST endpoint that accepts input features (store, item, date, etc.) and returns the predicted sales for the specified input.
+
+The FastAPI app also automatically loads the latest model and serves predictions in real time.
+
+#### **3. Utility for Fetching Latest Model (from DagsHub)**
+
+To always serve the latest version of the model, a utility function was created that pulls the latest model from **DagsHub** using **DVC**. This ensures that the model served by the API is always the most up-to-date version.
+
+#### **4. Local Testing**
+
+Before containerizing the application, the FastAPI app was tested locally using **Uvicorn**. This allowed us to ensure the API is running correctly and can respond to prediction requests.
+
+#### **5. Dockerize the API**
+
+A **Dockerfile** was created to containerize the FastAPI app. This makes it portable and easy to deploy to any cloud service, such as **Hugging Face Spaces**, or run locally in any environment that supports Docker.
+
+#### **6. Deployment to Hugging Face Spaces**
+
+Instead of using Render or Heroku, the FastAPI app was deployed to **Hugging Face Spaces**, which provides a free-tier hosting solution. The deployment was configured with the necessary build and start commands to ensure the API runs smoothly in the cloud environment.
+
+---
+
+### **Deliverables (Step 4)**
+
+After completing **Step 4**, the following deliverables are available:
+
+| Deliverable                | Path               |
+| -------------------------- | ------------------ |
+| FastAPI app                | `src/api/app.py`   |
+| Model fetching utility     | `src/api/utils.py` |
+| Dockerfile                 | `Dockerfile`       |
+| Hugging Face Spaces config | —                  |
+| Test endpoint              | `/predict`         |
+
+---
+
+### **Success Criteria (Step 4)**
+
+The following goals were achieved in **Step 4**:
+
+* The **FastAPI API** was successfully created and runs both locally and containerized.
+* The **`/predict`** endpoint accurately returns sales forecasts based on input features.
+* The model is **automatically pulled from DVC** (DagsHub) to ensure the latest version is always used.
+* The API was successfully deployed on **Hugging Face Spaces**, making it accessible online for real-time predictions.
+
 ---
 
 ### **Next Steps:**
 
-With automated retraining and robust version control via DVC and DagsHub in place, the project is ready to advance to **Step 4: Model Deployment**, focusing on packaging the model with FastAPI and Docker, and deploying it to cloud infrastructure for serving real-time predictions.
+With the model deployed and serving predictions, the project can now move on to **Step 5: Monitoring & Alerting**, where we’ll focus on setting up:
+
+* **API uptime & latency monitoring**
+* **Prediction drift & performance logging**
+* **Slack/email alerts on anomalies**
