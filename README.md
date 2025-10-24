@@ -272,12 +272,125 @@ The following goals were achieved in **Step 4**:
 * The model is **automatically pulled from DVC** (DagsHub) to ensure the latest version is always used.
 * The API was successfully deployed on **Hugging Face Spaces**, making it accessible online for real-time predictions.
 
+
+
+## 🧭 **Step 5: Monitoring & Alerting (Prometheus + Grafana)**
+
+### **Objective**
+
+The goal of **Step 5** is to set up an open-source monitoring and alerting system for the deployed FastAPI forecasting API.
+This ensures complete visibility into API health, performance, and usage over time — all running within a **free-tier Dockerized stack**.
+
+We aim to monitor:
+
+* **Model performance metrics** — latency, request rate, prediction volume
+* **API uptime and error rates**
+* **Drift detection triggers** (from Step 2)
+* **Retraining frequency** (from Step 3 workflow)
+
+We’ll use:
+
+* **Prometheus** → metrics collection
+* **Grafana** → visual dashboards
+* **Prometheus Client (Python)** → instrumentation inside the FastAPI app
+
+All components are orchestrated with **Docker Compose** for simple deployment.
+
 ---
 
-### **Next Steps:**
+### ⚙️ **Step 5.1 — Add Prometheus Metrics to FastAPI**
 
-With the model deployed and serving predictions, the project can now move on to **Step 5: Monitoring & Alerting**, where we’ll focus on setting up:
+The FastAPI service (`src/api/app.py`) was extended with **Prometheus instrumentation** to expose real-time metrics such as:
 
-* **API uptime & latency monitoring**
-* **Prediction drift & performance logging**
-* **Slack/email alerts on anomalies**
+* Total number of requests
+* Prediction count
+* Request latency distribution
+
+A dedicated `/metrics` endpoint was added, compatible with Prometheus scraping.
+
+---
+
+### 🐳 **Step 5.2 — Docker Compose Setup**
+
+A `docker-compose.yml` file was added at the project root to spin up **API + Prometheus + Grafana** simultaneously.
+This allows quick local orchestration of the complete monitoring stack with one command.
+
+---
+
+### 🧾 **Step 5.3 — Prometheus Configuration**
+
+A `prometheus.yml` configuration file defines the scrape job for the FastAPI container.
+Prometheus scrapes metrics periodically (every 5 seconds by default) to maintain up-to-date API performance data.
+
+---
+
+### 🧪 **Step 5.4 — Run the Full Stack**
+
+Launch all services together:
+
+```bash
+docker-compose up --build
+```
+
+Access the running stack via:
+
+| Service        | URL                                                                        |
+| -------------- | -------------------------------------------------------------------------- |
+| **FastAPI**    | [http://localhost:8000/docs](http://localhost:8000/docs)                   |
+| **Prometheus** | [http://localhost:9090](http://localhost:9090)                             |
+| **Grafana**    | [http://localhost:3000](http://localhost:3000) (user/pass = `admin/admin`) |
+
+This unified setup provides both API serving and live metric visualization.
+
+---
+
+### 📊 **Step 5.5 — Configure Grafana Dashboard**
+
+Inside Grafana:
+
+1. Navigate to **[http://localhost:3000](http://localhost:3000)**
+2. Add a **Prometheus Data Source** → `http://prometheus:9090`
+3. Create a new dashboard and add **query panels** using PromQL queries such as:
+
+| Metric                   | Example Query                                                                     | Description             |
+| ------------------------ | --------------------------------------------------------------------------------- | ----------------------- |
+| Request Rate             | `rate(request_count[1m])`                                                         | Requests per minute     |
+| Prediction Count         | `rate(prediction_count[1m])`                                                      | Predictions per minute  |
+| Request Latency (95th %) | `histogram_quantile(0.95, sum(rate(request_latency_seconds_bucket[1m])) by (le))` | 95th-percentile latency |
+
+These panels visualize API load, latency trends, and model usage patterns over time.
+
+---
+
+### **Deliverables (Step 5 – Monitoring & Alerting)**
+
+| Deliverable              | Path / Purpose                                         |
+| ------------------------ | ------------------------------------------------------ |
+| FastAPI App with Metrics | `src/api/app.py` – includes `/metrics` endpoint        |
+| Docker Compose Setup     | `docker-compose.yml` – runs API + Prometheus + Grafana |
+| Prometheus Configuration | `prometheus.yml` – defines scrape job                  |
+| Grafana Dashboard        | Custom panels for requests, latency, and usage         |
+
+---
+
+### **Success Criteria (Step 5)**
+
+* ✅ `/metrics` endpoint successfully exposes runtime metrics
+* ✅ Prometheus collects metrics from FastAPI container
+* ✅ Grafana visualizes request rate, latency, and prediction volume
+* ✅ Entire monitoring stack runs locally via Docker Compose
+
+---
+
+### **Next Steps: Step 6 – CI/CD Pipeline for Model Updates**
+
+With real-time monitoring now active, the next milestone is **Step 6: CI/CD Automation**.
+
+In this step, we will:
+
+* Automate **retraining and deployment** workflows using **GitHub Actions**
+* Trigger retraining on detected drift (Flags from Step 2 & Step 3)
+* Automatically update model artifacts in DVC/DagsHub
+* Rebuild and redeploy the FastAPI container to **Hugging Face Spaces**
+
+This completes the full MLOps lifecycle — from data ingestion to drift detection, retraining, deployment, and monitoring.
