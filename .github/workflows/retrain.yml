@@ -78,7 +78,7 @@ jobs:
           git remote set-url origin https://huggingface.co/spaces/${{ secrets.HF_USERNAME }}/${{ secrets.HF_SPACE }}
 
           # Add and commit only the model file
-          git add models/model.pkl
+          git add -f models/model.pkl
           git commit -m "Deploy updated model to Hugging Face"
           git push origin main
 
