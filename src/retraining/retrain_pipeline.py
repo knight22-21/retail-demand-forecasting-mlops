@@ -20,7 +20,7 @@ y = y.replace(0, epsilon)  # Replace 0's with epsilon (1e-6)
 
 # 3️⃣ Train new model
 model = XGBRegressor(
-    n_estimators=200, learning_rate=0.1, max_depth=7, random_state=42
+    n_estimators=200, learning_rate=0.1, max_depth=7, random_state=42 
 )
 model.fit(X, y)
 
