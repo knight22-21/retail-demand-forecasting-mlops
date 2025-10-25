@@ -69,7 +69,7 @@ jobs:
           git commit -m "Auto retrain: new model version [skip ci]" || echo "No changes to commit"
           git push
 
-      - name: Deploy to Hugging Face
+      - name: Deploy updated model to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_USERNAME: ${{ secrets.HF_USERNAME }}
@@ -78,10 +78,21 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-          git remote set-url origin https://huggingface:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE
+          # Clone your Hugging Face Space (if not already exists)
+          rm -rf hf_space
+          git clone https://huggingface:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE hf_space
+          cd hf_space
 
-          git add -f models/model.pkl
-          git commit -m "Deploy updated model to Hugging Face" || echo "No changes to commit"
+          # Pull the latest version so we don't remove existing files
+          git pull origin main --rebase
 
-          # 🚀 Force push to overwrite remote
-          git push -f origin main
+          # Copy only what you want to update (this overwrites existing file if it exists)
+          mkdir -p models
+          cp ../models/model.pkl ./models/model.pkl
+
+          # Add & commit only the changed files
+          git add models/model.pkl
+          git commit -m "Auto-update model file" || echo "No model changes to commit"
+
+          # Push back to Hugging Face (non-destructive update)
+          git push origin main
