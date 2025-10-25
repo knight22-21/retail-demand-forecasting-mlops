@@ -78,12 +78,12 @@ jobs:
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
 
-          # Use HF token for authentication (token acts like password)
-          git remote set-url origin https://$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE
+          # ✅ Set remote using Hugging Face token for authentication
+          git remote set-url origin https://huggingface:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE
 
-          # Force add the model (even if .gitignore blocks it)
+          # ✅ Force add ignored model file
           git add -f models/model.pkl
-          git commit -m "Deploy updated model to Hugging Face"
+          git commit -m "Deploy updated model to Hugging Face" || echo "No changes to commit"
+
+          # ✅ Push update to Hugging Face Space
           git push origin main
-
-
