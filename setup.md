@@ -201,7 +201,7 @@ Access:
 
 ## ⚙️ **7. CI/CD Automation (GitHub Actions)**
 
-The pipeline is defined in `.github/workflows/ci_cd_pipeline.yml`.
+The pipeline is defined in `.github/workflows/retrain.yml`.
 
 ### Workflow Steps:
 
