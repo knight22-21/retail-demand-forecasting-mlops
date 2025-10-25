@@ -1,6 +1,15 @@
 
 # **Store Item Demand Forecasting – End-to-End MLOps Pipeline**
 
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-API-green)
+![Docker](https://img.shields.io/badge/Docker-Containerization-blue)
+![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-lightgrey)
+![DVC](https://img.shields.io/badge/DVC-Data%20Versioning-purple)
+![Prometheus](https://img.shields.io/badge/Monitoring-Prometheus-orange)
+![Grafana](https://img.shields.io/badge/Dashboard-Grafana-yellow)
+![License](https://img.shields.io/badge/License-MIT-blue)
+
 ## **Overview**
 
 This project implements an **end-to-end MLOps pipeline** for forecasting daily sales of retail store items using machine learning.
