@@ -30,13 +30,14 @@ jobs:
           pip install -r requirements.txt
           pip install dvc[dagsHub]
 
-      - name: Configure DVC remote for DagsHub
+      - name: Configure DVC remote for DagsHub (secure)
         run: |
-          dvc remote modify dagshub_remote url https://dagshub.com/${{ secrets.DAGSHUB_USER }}/mlops_1.dvc
-          dvc remote modify dagshub_remote auth basic
-          dvc remote modify dagshub_remote user ${{ secrets.DAGSHUB_USER }}
-          dvc remote modify dagshub_remote password ${{ secrets.DAGSHUB_TOKEN }}
+          dvc remote modify --local dagshub_remote url https://dagshub.com/${{ secrets.DAGSHUB_USER }}/mlops_1.dvc
+          dvc remote modify --local dagshub_remote auth basic
+          dvc remote modify --local dagshub_remote user ${{ secrets.DAGSHUB_USER }}
+          dvc remote modify --local dagshub_remote password ${{ secrets.DAGSHUB_TOKEN }}
           dvc remote default dagshub_remote
+
 
       - name: Pull latest data and models from DagsHub
         run: dvc pull
