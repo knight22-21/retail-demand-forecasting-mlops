@@ -121,6 +121,8 @@ This component transforms the trained forecasting model into a production-ready,
 
 A complete monitoring and alerting system is integrated to provide visibility into API performance and operational health.
 
+![Grafana Dashboard](images/grafana_dashboard.png)
+
 **Stack Components:**
 
 * **Prometheus:** Collects runtime metrics such as request count, latency, and error rates from the FastAPI `/metrics` endpoint.
