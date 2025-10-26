@@ -25,6 +25,13 @@ Key objectives include:
 
 ---
 
+## **Project Workflow**
+
+Below is the high-level workflow of the project:
+
+![Project Workflow](images/workflow.png)
+
+
 ## **1. Data Preparation and Model Development**
 
 The project begins with preparing the dataset, engineering predictive features, and developing a baseline regression model.
