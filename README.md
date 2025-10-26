@@ -29,8 +29,9 @@ Key objectives include:
 
 Below is the high-level workflow of the project:
 
-![Project Workflow](images/workflow.png)
+![Project Workflow](assets/workflow.png)
 
+---
 
 ## **1. Data Preparation and Model Development**
 
