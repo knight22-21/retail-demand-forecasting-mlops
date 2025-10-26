@@ -78,6 +78,8 @@ Model retraining is fully automated through a reproducible and version-controlle
 * **Data and Model Versioning:**
   Implemented using **DVC (Data Version Control)** with **DagsHub** as the remote storage backend. This ensures versioned datasets and models are tracked efficiently outside the Git repository.
 
+![DagsHub Integration](assets/dagshub_repo.png)
+
 * **Retraining Script:**
   The retraining pipeline (`src/retraining/retrain_pipeline.py`) automatically:
 
