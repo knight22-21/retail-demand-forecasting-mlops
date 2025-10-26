@@ -130,7 +130,7 @@ A complete monitoring and alerting system is integrated to provide visibility in
 * **Prometheus Client (Python):** Used within the FastAPI app for instrumentation.
 * **Docker Compose:** Orchestrates the FastAPI, Prometheus, and Grafana services into a unified monitoring stack.
 
-![Prometheus Metrics](images/prometheus_metrics.png)
+![Prometheus Graph](images/prometheus_graph.png)
 
 Users can view:
 
